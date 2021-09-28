@@ -11,17 +11,18 @@ const app = express();
 app.use(cors());
 
 
+app.use(express.json());
+
+
 dbConnection();
 //dMdJKrLbUwGxtWtT
 //mean-user
 // console.log(process.env);
 
-app.get('/',(req,res)=>{
-    res.json({
-        ok:true,
-        msg:'Hola Mundo'
-    })
-});
+app.use('/api/usuarios',require('./routes/usuarios'));
+app.use('/api/login',require('./routes/auth'));
+
+
 
 
 app.listen(process.env.PORT,()=>{
