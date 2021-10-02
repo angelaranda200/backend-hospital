@@ -15,6 +15,8 @@ app.use(express.json());
 
 
 dbConnection();
+
+app.use(express.static('public'));
 //dMdJKrLbUwGxtWtT
 //mean-user
 // console.log(process.env);
