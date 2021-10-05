@@ -1,4 +1,5 @@
 const { response, request } = require("express");
+const { rsort } = require("semver");
 const Medico = require('../models/medico');
 
 const getMedicos =async(req,res=response)=>{
@@ -40,7 +41,43 @@ const crearMedico =async(req=request,res=response)=>{
     
 
 }
-const actualizarMedico =(req,res=response)=>{
+const actualizarMedico =async(req,res=response)=>{
+
+    const id = req.params.id;
+    const uid = req.uid;
+    
+
+
+    try {
+        const MedicoDB = Medico.findById(id);
+        if (!MedicoDB) {
+            res.status(404).json({
+                ok:false,
+                msg:'Medico no encontrado por id'
+            })
+        }
+
+        const cambiosMedicos = {
+            ...req.body,
+            usuario:uid
+        }
+        const medicoactualizado = await Medico.findByIdAndUpdate(id,cambiosMedicos,{new:true})
+
+        res.json({
+            ok:true,
+            msg:'Medico actualizado',
+            medicoactualizado
+        })
+        
+        
+        
+    } catch (error) {
+        res.status(404).json({
+            ok:false,
+            msg:'Hable con el admin'
+        })
+        
+    }
 
     res.json({
         ok:true,
@@ -48,12 +85,43 @@ const actualizarMedico =(req,res=response)=>{
     })
 
 }
-const borrarMedico =(req,res=response)=>{
+const borrarMedico =async(req,res=response)=>{
 
-    res.json({
-        ok:true,
-        msg:'borrarMedico'
-    })
+    const id = req.params.id;
+    
+    
+
+
+    try {
+        const MedicoDB = Medico.findById(id);
+        if (!MedicoDB) {
+            res.status(404).json({
+                ok:false,
+                msg:'Medico no encontrado por id'
+            })
+        }
+
+        await Medico.findByIdAndDelete(id);
+
+        
+
+        res.json({
+            ok:true,
+            msg:'Medico eliminado',
+            
+        })
+        
+        
+        
+    } catch (error) {
+        res.status(404).json({
+            ok:false,
+            msg:'Hable con el admin'
+        })
+        
+    }
+
+    
 
 }
 
