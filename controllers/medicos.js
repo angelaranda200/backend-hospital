@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { rsort } = require("semver");
+
 const Medico = require('../models/medico');
 
 const getMedicos =async(req,res=response)=>{
@@ -12,6 +12,31 @@ const getMedicos =async(req,res=response)=>{
         ok:true,
         medicos
     })
+
+}
+
+const getMedicoById =async(req,res=response)=>{
+
+    const id = req.params.id;
+
+    try {
+        
+        const medico = await Medico.findById(id)
+                                    .populate('usuario','nombre')
+                                    .populate('hospital','nombre');
+    
+                                    
+        res.json({
+            ok:true,
+            medico
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            ok:false,
+            msg:'Hable con el admin'
+        })
+    }
 
 }
 
@@ -133,5 +158,6 @@ module.exports={
     getMedicos,
     crearMedico,
     actualizarMedico,
-    borrarMedico
+    borrarMedico,
+    getMedicoById
 }
